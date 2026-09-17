@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-ink-900 text-slate-200 font-display antialiased;
+  font-feature-settings: 'tnum' 1;
+}
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0B0F17; }
+::-webkit-scrollbar-thumb { background: #28324A; border-radius: 6px; border: 2px solid #0B0F17; }
+::-webkit-scrollbar-thumb:hover { background: #3A4664; }
+
+@layer utilities {
+  .glow-red { box-shadow: 0 0 10px rgba(248,113,113,.65), 0 0 22px rgba(248,113,113,.28); }
+  .glow-green { box-shadow: 0 0 10px rgba(74,222,128,.6), 0 0 22px rgba(74,222,128,.25); }
+  .glow-amber { box-shadow: 0 0 10px rgba(251,191,36,.65), 0 0 22px rgba(251,191,36,.3); }
+  .glow-cyan { box-shadow: 0 0 10px rgba(34,211,238,.5); }
+  .text-glow-red { text-shadow: 0 0 8px rgba(248,113,113,.8); }
+  .text-glow-green { text-shadow: 0 0 8px rgba(74,222,128,.7); }
+  .text-glow-amber { text-shadow: 0 0 8px rgba(251,191,36,.8); }
+  .panel { @apply bg-ink-850/90 border border-ink-600/70 rounded-lg; }
+  .panel-title { @apply text-[11px] uppercase tracking-[0.18em] text-slate-400 font-semibold; }
+  .num { @apply font-mono tabular-nums; }
+  .btn-primary { @apply px-4 py-2 rounded text-xs font-semibold bg-cyan-500/15 border border-cyan-500/50 text-cyan-300 hover:bg-cyan-500/25 transition-colors; }
+  .btn-secondary { @apply px-4 py-2 rounded text-xs font-semibold bg-ink-800 border border-ink-500 text-slate-300 hover:bg-ink-700 transition-colors; }
+  .btn-danger { @apply px-4 py-2 rounded text-xs font-semibold bg-red-500/15 border border-red-500/50 text-red-300 hover:bg-red-500/25 transition-colors; }
+}
+
+/* blueprint grid backdrop for the SLD canvas */
+.sld-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.045) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+
+/* ------------------------ formal report document ------------------------- */
+.report-doc { @apply shadow-2xl; }
+.report-header { @apply bg-gradient-to-r from-ink-800/80 to-ink-850/40; }
+.report-sec {
+  @apply text-[11px] font-bold uppercase tracking-[0.2em] text-cyan-300/90 pb-1.5 mb-2;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.18);
+  display: flex; align-items: center; gap: 6px;
+}
+.report-sec::before {
+  content: '';
+  width: 3px; height: 12px;
+  background: #22D3EE;
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(34, 211, 238, 0.6);
+}
+
+@media print {
+  body { background: #fff !important; color: #111 !important; }
+  .no-print { display: none !important; }
+
+  /* audit printing: only the formal report document, on white */
+  body:has(#report-doc) * { visibility: hidden; }
+  body:has(#report-doc) #report-doc,
+  body:has(#report-doc) #report-doc * { visibility: visible; }
+  #report-doc {
+    position: absolute; inset: 0 auto auto 0; width: 100%;
+    border: none !important; box-shadow: none !important; border-radius: 0 !important;
+    background: #fff !important; color: #111 !important;
+  }
+  #report-doc .report-header { background: #f1f5f9 !important; border-color: #cbd5e1 !important; }
+  #report-doc .report-header h1,
+  #report-doc .report-header p,
+  #report-doc .report-header span { color: #111 !important; }
+  #report-doc .report-sec { color: #0e7490 !important; border-color: #94a3b8 !important; }
+  #report-doc .panel { background: #f8fafc !important; border-color: #cbd5e1 !important; }
+  #report-doc th,
+  #report-doc td { border-color: #cbd5e1 !important; color: #111 !important; }
+  #report-doc thead { background: #e2e8f0 !important; }
+  #report-doc .num, #report-doc .text-slate-100, #report-doc .text-slate-200, #report-doc .text-slate-300,
+  #report-doc .text-slate-400, #report-doc .text-slate-500 { color: #1e293b !important; }
+  #report-doc .text-volt-green, #report-doc .text-green-300 { color: #15803d !important; }
+  #report-doc .text-volt-amber, #report-doc .text-amber-300 { color: #a16207 !important; }
+  #report-doc .text-volt-red, #report-doc .text-red-300 { color: #b91c1c !important; }
+  #report-doc .text-volt-cyan, #report-doc .text-cyan-300 { color: #0e7490 !important; }
+  #report-doc .text-violet-300 { color: #6d28d9 !important; }
+  #report-doc table { font-size: 10px !important; }
+  #report-doc tr, #report-doc td, #report-doc th { page-break-inside: avoid; }
+  #report-doc section { page-break-inside: auto; }
+  /* scrolling annex containers must print in full, not clip to max-height */
+  #report-doc div[class*="max-h"] { max-height: none !important; overflow: visible !important; }
+  #report-doc thead { display: table-header-group; }
+  /* recharts inline styles survive the colour overrides; keep charts legible */
+  #report-doc .recharts-wrapper { background: #fff !important; }
+  #report-doc .recharts-text { fill: #334155 !important; }
+}
